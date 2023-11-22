@@ -57,5 +57,17 @@ async def get_image(item_id):
 
     return Response(content=bytes.fromhex(image_bytes),media_type='image/*')
 
-app.mount("/", StaticFiles(directory="frontend",html=True), name="frontend") #html true쓰는 이유는 .html을 안붙여도 돼 제일 마지막줄 루트경로
+@app.post('/signup')
+def signup(id:Annotated[str,Form()], 
+           name:Annotated[str,Form()],
+           email:Annotated[str,Form()],
+           password:Annotated[str,Form()]
+           ):
+    cur.execute(f""" 
+                INSERT IN TO users(id,name,email,password)
+                VALUES('{id}','{name}','{email}','{password}')
+                """)
+    con.commit()
+    return '200'
 
+app.mount("/", StaticFiles(directory="frontend",html=True), name="frontend") #html true쓰는 이유는 .html을 안붙여도 돼 제일 마지막줄 루트경로
